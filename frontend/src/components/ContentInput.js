@@ -22,7 +22,9 @@ function ContentInput({ onComplete }) {
 
     try {
       // Process content through API
-      const response = await fetch('/api/content/process', {
+      const BACKEND_URL = 'https://your-backend-url.onrender.com';//your-backend-url.onrender.com';
+
+      const response = await fetch('${https://adaptive-curriculum-engine.onrender.com}/api/content/process', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
