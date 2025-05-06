@@ -91,6 +91,7 @@ function App() {
             generateSlides={generateSlides}
             setGenerateSlides={setGenerateSlides}
           />
+        )}    
 
           {step === 4 && (
             <OutputDisplay
