@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: adaptive-curriculum-engine-api
+    env: node
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: FRONTEND_URL
+        value: https://your-netlify-site.netlify.app
+    disk:
+      name: uploads
+      mountPath: /opt/render/project/src/backend/uploads
+      sizeGB: 1
+    healthCheckPath: /health
