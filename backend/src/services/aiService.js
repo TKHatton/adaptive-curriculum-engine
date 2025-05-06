@@ -5,8 +5,6 @@ if (!process.env.OPENAI_API_KEY) {
   console.warn('⚠️ Warning: OPENAI_API_KEY is not set. AI features will fail.');
 }
 
-const { OpenAI } = require('openai');
-
 // Initialize OpenAI client
 const openai = new OpenAI({ 
   apiKey: process.env.OPENAI_API_KEY
