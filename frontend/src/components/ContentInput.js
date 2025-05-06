@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import FileUpload from './FileUpload';
+import apiService from '../services/apiService';
 
 function ContentInput({ onComplete }) {
   const [textContent, setTextContent] = useState('');
@@ -21,24 +22,30 @@ function ContentInput({ onComplete }) {
     setError('');
 
     try {
-      // Process content through API
-      const BACKEND_URL = 'https://adaptive-curriculum-engine.onrender.com';
-
-      const response = await fetch(`${BACKEND_URL}/api/content/process`, {
-
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          textContent
-        })
+      // Create form data for file upload
+      const formData = new FormData();
+      
+      // Add text content if provided
+      if (textContent) {
+        formData.append('textContent', textContent);
+      }
+      
+      // Add uploaded files if any
+      uploadedFiles.forEach((file, index) => {
+        formData.append('documents', file);
       });
-
-      const data = await response.json();
-      onComplete(data);
+      
+      // Process content through API
+      const response = await apiService.processContent(formData);
+      
+      if (response && response.data) {
+        onComplete(response.data);
+      } else {
+        throw new Error('Invalid response from server');
+      }
     } catch (err) {
-      setError('Failed to process content');
+      console.error('Content processing error:', err);
+      setError(err.response?.data?.message || err.message || 'Failed to process content');
     } finally {
       setProcessing(false);
     }
@@ -52,7 +59,32 @@ function ContentInput({ onComplete }) {
       <FileUpload
         onFileSelect={handleFileUpload}
         acceptedFormats={['.pdf', '.docx', '.txt']}
+        multiple={true}
       />
+
+      {uploadedFiles.length > 0 && (
+        <div className="file-list">
+          <h4>Selected Files:</h4>
+          <ul>
+            {uploadedFiles.map((file, index) => (
+              <div key={index} className="file-item">
+                <span>{file.name} ({Math.round(file.size / 1024)} KB)</span>
+                <button 
+                  type="button" 
+                  className="remove-btn" 
+                  onClick={() => {
+                    const newFiles = [...uploadedFiles];
+                    newFiles.splice(index, 1);
+                    setUploadedFiles(newFiles);
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div className="form-group">
         <label className="form-label">Or enter content directly:</label>

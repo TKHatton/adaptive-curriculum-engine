@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+// Get API URL from environment variable or use default
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
+// Create an axios instance with default config
 const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -10,36 +12,36 @@ const api = axios.create({
 });
 
 const apiService = {
-  // Voice upload endpoint
-  uploadVoice: async (file) => {
-    const formData = new FormData();
-    formData.append('voice', file);
-    
-    return api.post('/voice/upload', formData, {
+  // Content processing endpoint
+  processContent: async (formData) => {
+    return api.post('/content/process', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
   },
 
-  // Content processing endpoint
-  processContent: async (data) => {
-    return api.post('/content/process', data);
+  // Writing profile endpoints
+  saveWritingSamples: async (samples) => {
+    return api.post('/writing/samples', { samples });
   },
 
-  // Script generation endpoint
+  getWritingProfile: async (profileId) => {
+    return api.get(`/writing/${profileId}`);
+  },
+
+  // Script generation endpoints
   generateScript: async (data) => {
-    return api.post('/script/generate', data);
+    return api.post('/generate/script', data);
   },
 
-  // Script update endpoint
   updateScript: async (scriptId, content) => {
     return api.put(`/script/${scriptId}`, { content });
   },
 
-  // Slide generation endpoint
-  generateSlides: async (scriptId) => {
-    return api.post('/slides/generate', { scriptId });
+  // Slide generation endpoints
+  generateSlides: async (data) => {
+    return api.post('/generate/slides', data);
   },
 
   // Health check endpoint
