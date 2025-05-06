@@ -17,6 +17,13 @@ const writingController = {
         });
       }
       
+      if (!samples.every(s => s.text && typeof s.text === 'string')) {
+        return res.status(400).json({
+          error: 'Invalid sample format',
+          message: 'Each sample must contain a text field of type string'
+        });
+      }
+      
       // Generate unique profile ID
       const profileId = uuidv4();
       
@@ -72,8 +79,16 @@ const writingController = {
         });
       }
       
-      const profile = JSON.parse(fs.readFileSync(profilePath, 'utf8'));
-      
+      let profile;
+      try {
+        profile = JSON.parse(fs.readFileSync(profilePath, 'utf8'));
+      } catch (err) {
+        return res.status(500).json({
+          error: 'Invalid JSON',
+          message: 'Failed to parse profile JSON'
+       });
+    }
+
       res.status(200).json(profile);
       
     } catch (error) {
@@ -99,7 +114,15 @@ const writingController = {
       }
       
       // Load existing profile
-      const profile = JSON.parse(fs.readFileSync(profilePath, 'utf8'));
+      let profile;
+      try {
+        profile = JSON.parse(fs.readFileSync(profilePath, 'utf8'));
+      } catch (err) {
+        return res.status(500).json({
+          error: 'Invalid JSON',
+          message: 'Failed to parse profile JSON'
+    });
+  }
       
       // Update profile
       if (samples && Array.isArray(samples)) {

@@ -1,6 +1,12 @@
 const { OpenAI } = require('openai');
 require('dotenv').config();
 
+if (!process.env.OPENAI_API_KEY) {
+  console.warn('⚠️ Warning: OPENAI_API_KEY is not set. AI features will fail.');
+}
+
+const { OpenAI } = require('openai');
+
 // Initialize OpenAI client
 const openai = new OpenAI({ 
   apiKey: process.env.OPENAI_API_KEY
@@ -8,7 +14,7 @@ const openai = new OpenAI({
 
 // Default model options
 const DEFAULT_MODEL = 'gpt-4';
-const MAX_TOKENS = 8000;
+const MAX_TOKENS = 4000;
 
 const aiService = {
   /**
@@ -183,6 +189,8 @@ const aiService = {
       if (!jsonMatch) {
         throw new Error('Invalid slides format received from AI');
       }
+
+      console.debug('Raw slides output:', slidesText);
 
       try {
         return JSON.parse(jsonMatch[0]);
