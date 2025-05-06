@@ -4,6 +4,8 @@ const path = require('path');
 const processContent = async (req, res) => {
   const { textContent } = req.body;
 
+  console.log('📥 Received textContent:', textContent);
+
   if (!textContent) {
     return res.status(400).json({ message: 'No content received' });
   }
