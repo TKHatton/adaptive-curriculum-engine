@@ -83,11 +83,14 @@ function App() {
 
           {step === 3 && (
             <GenerationOptions
-              contentData={contentData}
-              writingProfile={writingProfile}
-              onGenerate={handleGenerationComplete}
-            />
-          )}
+            contentData={contentData}
+            writingProfile={writingProfile}
+            onGenerate={handleGenerationComplete}
+            generateScript={generateScript}
+            setGenerateScript={setGenerateScript}
+            generateSlides={generateSlides}
+            setGenerateSlides={setGenerateSlides}
+          />
 
           {step === 4 && (
             <OutputDisplay
