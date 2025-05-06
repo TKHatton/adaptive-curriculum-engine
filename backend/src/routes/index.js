@@ -6,7 +6,7 @@ const writingController = require('../controllers/writingController');
 const generationController = require('../controllers/generationController');
 
 // Content processing routes
-router.post('/content/process', contentController.processController');
+router.post('/content/process', contentController.processContent);
 router.get('/content/:contentId', contentController.getContent);
 
 // Writing sample routes
