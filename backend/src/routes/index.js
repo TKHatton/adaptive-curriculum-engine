@@ -7,6 +7,7 @@ const generationController = require('../controllers/generationController');
 
 // Content processing routes
 router.post('/content/process', contentController.processContent);
+router.post('/content/process', fileHandler.documents, contentController.process);
 router.get('/content/:contentId', contentController.getContent);
 
 // Writing sample routes

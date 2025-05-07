@@ -30,6 +30,12 @@ function ContentInput({ onComplete }) {
         formData.append('textContent', textContent);
       }
       
+    } catch (err) {
+      console.error('Error details:', err);
+      console.error('Response data:', err.response?.data);
+      setError(err.response?.data?.message || err.message || 'Failed to process content');
+    }
+  
       // Add uploaded files if any
       uploadedFiles.forEach((file, index) => {
         formData.append('documents', file);
