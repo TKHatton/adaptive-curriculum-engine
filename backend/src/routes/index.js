@@ -4,9 +4,9 @@ const router = express.Router();
 const contentController = require('../controllers/contentController');
 const writingController = require('../controllers/writingController');
 const generationController = require('../controllers/generationController');
+const fileHandler = require('../middleware/fileHandler'); // Add this import
 
 // Content processing routes
-router.post('/content/process', contentController.processContent);
 router.post('/content/process', fileHandler.documents, contentController.process);
 router.get('/content/:contentId', contentController.getContent);
 
