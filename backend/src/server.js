@@ -1,53 +1,39 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const helmet = require('helmet');
-const morgan = require('morgan');
-const rateLimit = require('express-rate-limit');
-
-const routes = require('./routes');
-const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Security middleware
-app.use(helmet());
+// Middleware
 app.use(cors({
-  origin: ['https://adaptive-curriculum-engine.netlify.app', 'http://localhost:3000'],
+  origin: process.env.FRONTEND_URL || '*',
   credentials: true
 }));
-
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
-});
-app.use('/api/', limiter);
-
-// Logging
-app.use(morgan('combined'));
-
-// Body parsing
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.use('/api', routes);
-
-// Health check
-app.get('/health', (req, res) => {
+// Test route
+app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
 });
 
-// Error handling
-app.use(errorHandler);
-
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ error: 'Route not found' });
+// Simplified content route
+app.post('/api/content/process', (req, res) => {
+  const { textContent } = req.body;
+  
+  // Simple processing
+  console.log('Received content:', textContent);
+  
+  res.status(200).json({
+    message: 'Content processed successfully',
+    contentId: 'test-123',
+    contentPreview: textContent ? textContent.substring(0, 200) + '...' : 'No content provided',
+    wordCount: textContent ? textContent.split(/\s+/).length : 0
+  });
 });
 
+// Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
